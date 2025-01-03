@@ -45,6 +45,8 @@ elif st.session_state.step == 3:
         st.session_state.habits = habits
         st.session_state.step = 4
 
+from datetime import time
+
 # Step 4: Reminders
 elif st.session_state.step == 4:
     st.title("Set Reminders")
