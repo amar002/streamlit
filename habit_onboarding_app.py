@@ -2,6 +2,8 @@ import streamlit as st
 from datetime import time, datetime, timedelta
 from dateutil.parser import parse
 import matplotlib.pyplot as plt
+from streamlit_echarts import st_echarts
+import random
 
 # Initialize session state to store user data
 if "step" not in st.session_state:
@@ -103,6 +105,31 @@ elif st.session_state.step == 6:
             if habit["due"] == "Tomorrow":
                 st.write(f"⏳ {habit['name']} - {habit['due']}")
                 st.progress(0)
+
+    # Habit Analytics: Streaks and Completion Rates
+    st.write("### Habit Analytics")
+    completed_habits = sum(1 for h in st.session_state.habits_data if h["status"] == "Completed")
+    total_habits = len(st.session_state.habits_data)
+    streak_data = [completed_habits, total_habits - completed_habits]
+
+    fig, ax = plt.subplots()
+    ax.pie(streak_data, labels=["Completed", "Pending"], autopct='%1.1f%%', startangle=90)
+    ax.axis("equal")  # Equal aspect ratio ensures the pie chart is circular.
+    st.pyplot(fig)
+
+    # Goal Progress Section
+    st.write("### Goal Progress")
+    goal_progress = completed_habits / total_habits if total_habits > 0 else 0
+    st.progress(goal_progress)
+
+    # Motivational Section
+    st.write("### Motivational Section")
+    quotes = [
+        "Small daily improvements are the key to staggering long-term results.",
+        "Success is the sum of small efforts, repeated day in and day out.",
+        "The journey of a thousand miles begins with one step.",
+    ]
+    st.info(f"🌟 {random.choice(quotes)}")
 
     # Footer
     st.write("---")
