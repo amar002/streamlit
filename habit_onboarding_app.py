@@ -1,7 +1,6 @@
 import streamlit as st
 from datetime import time, datetime, timedelta
 from dateutil.parser import parse
-pip install matplotlib
 import matplotlib.pyplot as plt
 
 # Initialize session state to store user data
