@@ -49,7 +49,7 @@ elif st.session_state.step == 3:
 elif st.session_state.step == 4:
     st.title("Set Reminders")
     reminder_enabled = st.checkbox("Enable reminders", value=st.session_state.reminders["enabled"])
-    reminder_time = st.time_input("Reminder Time", value="09:00 AM")
+    reminder_time = st.time_input("Reminder Time", value=time(9, 0))  # 9:00 AM
     
     if st.button("Finish"):
         st.session_state.reminders = {"enabled": reminder_enabled, "time": reminder_time}
