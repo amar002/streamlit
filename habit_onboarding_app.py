@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 # Initialize session state to store user data
 if "step" not in st.session_state:
     st.session_state.step = 1
@@ -44,8 +45,6 @@ elif st.session_state.step == 3:
     if st.button("Save Habits"):
         st.session_state.habits = habits
         st.session_state.step = 4
-
-from datetime import time
 
 # Step 4: Reminders
 elif st.session_state.step == 4:
