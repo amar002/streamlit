@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import time, datetime, timedelta
 from dateutil.parser import parse
+import matplotlib.pyplot as plt
 
 # Initialize session state to store user data
 if "step" not in st.session_state:
@@ -49,7 +50,8 @@ elif st.session_state.step == 3:
         habits.append(st.text_input("Habit 2 (Education):", "Review one chapter daily"))
 
     if st.button("Save Habits"):
-        st.session_state.habits = habits
+        for habit in habits:
+            st.session_state.habits_data.append({"name": habit, "due": "Today", "status": "Pending"})
         st.session_state.step = 4
 
 # Step 4: Reminders
@@ -74,30 +76,33 @@ elif st.session_state.step == 5:
 elif st.session_state.step == 6:
     st.title("Habit Dashboard")
 
-    # Today's Habits
-    st.subheader("Today's Habits")
-    for habit in st.session_state.habits_data:
-        if habit["due"] == "Today":
-            col1, col2 = st.columns([3, 1])
-            with col1:
+    # Columns for different sections of habits
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.write("### Today’s Habits")
+        for habit in st.session_state.habits_data:
+            if habit["due"] == "Today":
                 st.write(f"📝 {habit['name']}")
-            with col2:
+                progress = 100 if habit["status"] == "Completed" else 0
+                st.progress(progress / 100)
                 if st.button("Mark as Done", key=habit["name"]):
                     habit["status"] = "Completed"
                     st.success(f"Completed: {habit['name']}")
 
-    # Progress Summary
-    st.subheader("Progress Summary")
-    completed_habits = sum(1 for h in st.session_state.habits_data if h["status"] == "Completed")
-    total_habits = sum(1 for h in st.session_state.habits_data if h["due"] == "Today")
-    st.write(f"Habits Completed Today: {completed_habits}/{total_habits}")
-    st.progress(completed_habits / total_habits if total_habits > 0 else 0)
+    with col2:
+        st.write("### Habit Overview")
+        for habit in st.session_state.habits_data:
+            st.write(f"{habit['name']} - Status: {habit['status']}")
+            progress = 100 if habit["status"] == "Completed" else 0
+            st.progress(progress / 100)
 
-    # Upcoming Habits
-    st.subheader("Upcoming Habits")
-    for habit in st.session_state.habits_data:
-        if habit["due"] == "Tomorrow":
-            st.write(f"⏳ {habit['name']} - {habit['due']}")
+    with col3:
+        st.write("### Upcoming Habits")
+        for habit in st.session_state.habits_data:
+            if habit["due"] == "Tomorrow":
+                st.write(f"⏳ {habit['name']} - {habit['due']}")
+                st.progress(0)
 
     # Footer
     st.write("---")
